@@ -9,7 +9,7 @@ function principal() {
   }
 
   function apagarInput() {
-    input.value = '';
+    input.value = "";
     input.focus();
   }
 
@@ -17,14 +17,12 @@ function principal() {
     const li = criaLi();
     li.innerText = textoInput;
     lista.appendChild(li);
+    criarBtnApagar(li); // Criar botão de "apagar" para o item atual
     apagarInput();
-    criarBtnApagar(li);
     salvarTarefas();
   }
-  
-  // fazer aceitar envio com enter
+
   input.addEventListener("keypress", function (e) {
-    //  console.log(e) pega codigo da tecla pressionada
     if (e.keyCode === 13) {
       if (!input.value) return;
       criarTarefa(input.value);
@@ -32,28 +30,21 @@ function principal() {
   });
 
   function criarBtnApagar(li) {
-    // espaçamento
-    li.innerText += " ";
     const btnApagar = document.createElement("button");
-    btnApagar.innerHTML = "apagar";
+    btnApagar.innerHTML = `<i class="bi bi-x-circle"></i>`;
     btnApagar.setAttribute("class", "apagar");
     btnApagar.setAttribute("title", "Apagar esta tarefa");
     li.appendChild(btnApagar);
+
+    btnApagar.addEventListener("click", function () {
+      li.remove(); // Remover o item correspondente ao botão de "apagar" clicado
+      salvarTarefas();
+    });
   }
 
   btn.addEventListener("click", function () {
     if (!input.value) return;
     criarTarefa(input.value);
-  });
-
-  document.addEventListener("click", function (e) {
-    const el = e.target;
-    // se clicar onde tem a classe apagar
-    if (el.classList.contains("apagar")) {
-      // remova o pai e o filho
-      el.parentElement.remove();
-      salvarTarefas();
-    }
   });
 
   function salvarTarefas() {
@@ -69,6 +60,7 @@ function principal() {
     const tarefasJSON = JSON.stringify(listaDeTarefas);
     localStorage.setItem("tarefas", tarefasJSON);
   }
+
   function adicionaTarefasSalvas() {
     const tarefas = localStorage.getItem("tarefas");
     const listaDeTarefas = JSON.parse(tarefas);
@@ -77,6 +69,7 @@ function principal() {
       criarTarefa(tarefa);
     }
   }
+
   adicionaTarefasSalvas();
 }
 
